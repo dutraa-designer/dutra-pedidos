@@ -1,0 +1,1 @@
+ALTER TABLE `pieces` ADD `paid_value` real DEFAULT 0;
