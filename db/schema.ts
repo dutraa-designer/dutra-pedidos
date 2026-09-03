@@ -14,6 +14,7 @@ export const pieces = sqliteTable("pieces", {
   transportValue: real("transport_value"),
   mailStatus: text("mail_status"),
   billingStatus: text("billing_status"),
+  photoKey: text("photo_key"),
   notes: text("notes"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),

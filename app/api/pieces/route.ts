@@ -42,6 +42,7 @@ function validatePayload(payload: Record<string, unknown>, partial = false) {
     ...(payload.transportValue !== undefined ? { transportValue: payload.transportValue === "" || payload.transportValue === null ? null : Math.max(0, cleanNumber(payload.transportValue)) } : {}),
     ...(payload.mailStatus !== undefined ? { mailStatus: cleanText(payload.mailStatus) } : {}),
     ...(payload.billingStatus !== undefined ? { billingStatus: cleanText(payload.billingStatus) } : {}),
+    ...(payload.photoKey !== undefined ? { photoKey: cleanText(payload.photoKey) } : {}),
     ...(payload.notes !== undefined ? { notes: cleanText(payload.notes) } : {}),
     updatedAt: new Date().toISOString(),
   };
