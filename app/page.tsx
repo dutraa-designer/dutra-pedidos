@@ -41,6 +41,11 @@ const nextAction = (piece: Piece) => {
   if (piece.billingStatus !== "OK") return { label: "Conferir faturamento", tone: "purple" };
   return { label: "Tudo em dia", tone: "green" };
 };
+const toForm = (piece: Piece): FormState => {
+  const copy = { ...piece } as Partial<Piece>;
+  delete copy.id;
+  return copy as FormState;
+};
 
 export default function Home() {
   const [pieces, setPieces] = useState<Piece[]>([]); const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false);
@@ -56,6 +61,8 @@ export default function Home() {
     } catch { setPieces(initialPieces); setNotice("Modo de demonstração: os dados iniciais estão visíveis, mas o banco ainda não respondeu."); }
     finally { setLoading(false); }
   };
+  // The initial fetch synchronizes the view with the shared database.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { void loadPieces(); }, []);
   useEffect(() => { if (!notice) return; const timer = window.setTimeout(() => setNotice(""), 5500); return () => window.clearTimeout(timer); }, [notice]);
   const stats = useMemo(() => ({
@@ -69,7 +76,7 @@ export default function Home() {
     return matchesText && matchesFilter;
   }).sort((a, b) => a.code - b.code), [pieces, query, filter]);
   const openNew = () => { setEditingId(null); setForm({ ...emptyForm, code: Math.max(0, ...pieces.map((p) => p.code)) + 1 }); setFormOpen(true); };
-  const openEdit = (piece: Piece) => { const { id: _id, ...rest } = piece; setEditingId(piece.id); setForm(rest); setFormOpen(true); };
+  const openEdit = (piece: Piece) => { setEditingId(piece.id); setForm(toForm(piece)); setFormOpen(true); };
   const updateForm = (key: keyof FormState, value: string | number | null) => setForm((current) => ({ ...current, [key]: value }));
   const savePiece = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); if (!form.description.trim()) return setNotice("Informe a descrição da peça."); setSaving(true);

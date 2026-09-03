@@ -7,6 +7,8 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; background: var(--background); color: var(--foreground); font-family: "Avenir Next", "Inter", Arial, sans-serif; font-size: 15px; }
 button, input, select, textarea { font: inherit; } button { cursor: pointer; }
+.scrollbar-thin { scrollbar-width: thin; }
+.scrollbar-none { scrollbar-width: none; }
 .app-shell { min-height: 100vh; overflow: hidden; position: relative; background: radial-gradient(circle at 7% 0%, rgba(116,103,228,.10), transparent 30%), linear-gradient(140deg, #f9faff 0%, #f5f6fb 100%); }
 .app-container { width: min(1500px, calc(100% - 64px)); margin: 0 auto; position: relative; z-index: 1; padding: 29px 0 38px; }
 .app-orb { position: absolute; border-radius: 999px; pointer-events: none; opacity: .6; filter: blur(50px); }.orb-one { width: 300px; height: 300px; background: #dedaff; right: -110px; top: 90px; }.orb-two { width: 200px; height: 200px; background: #ffe3d6; left: -90px; bottom: 120px; }
