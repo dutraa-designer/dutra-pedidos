@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 type Piece = {
   id: number; code: number; description: string; quantity: number; productionStatus: string; productionValue: number;
   bathStatus: string | null; bathValue: number | null; shippingStatus: string | null; transportValue: number | null;
+  bathSendStatus: string | null; bathSendValue: number | null; bathReturnStatus: string | null; bathReturnValue: number | null; mailValue: number | null;
   mailStatus: string | null; billingStatus: string | null; photoKey?: string | null; paidValue?: number | null; notes: string | null;
 };
 type FormState = Omit<Piece, "id">;
@@ -24,9 +25,9 @@ const initialPieces: Piece[] = [
   { id: 8, code: 8, description: "PINGENTE FLOR DOS DESBRAVADORES", quantity: 1, productionStatus: "EM PRODUÇÃO", productionValue: 35, bathStatus: null, bathValue: null, shippingStatus: null, transportValue: null, mailStatus: null, billingStatus: null, notes: null },
   { id: 9, code: 9, description: "PINGENTE U.B (20 MILESIMOS)", quantity: 1, productionStatus: "EM PRODUÇÃO", productionValue: 35, bathStatus: null, bathValue: null, shippingStatus: null, transportValue: null, mailStatus: null, billingStatus: null, notes: null },
 ];
-const emptyForm: FormState = { code: 10, description: "", quantity: 1, productionStatus: "EM PRODUÇÃO", productionValue: 35, bathStatus: null, bathValue: null, shippingStatus: null, transportValue: null, mailStatus: null, billingStatus: null, photoKey: null, paidValue: 0, notes: null };
+const emptyForm: FormState = { code: 10, description: "", quantity: 1, productionStatus: "EM PRODUÇÃO", productionValue: 35, bathStatus: null, bathValue: null, shippingStatus: null, transportValue: null, bathSendStatus: null, bathSendValue: null, bathReturnStatus: null, bathReturnValue: null, mailValue: null, mailStatus: null, billingStatus: null, photoKey: null, paidValue: 0, notes: null };
 const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const totalCost = (piece: Piece) => (piece.productionValue || 0) + (piece.bathValue || 0) + (piece.transportValue || 0);
+const totalCost = (piece: Piece) => (piece.productionValue || 0) + (piece.bathValue || 0) + (piece.transportValue || 0) + (piece.bathSendValue || 0) + (piece.bathReturnValue || 0) + (piece.mailValue || 0);
 const paymentState = (piece: Piece) => {
   const total = totalCost(piece); const paid = Math.max(0, piece.paidValue || 0); const open = Math.max(0, total - paid);
   if (total > 0 && paid >= total) return { label: "Já pagou", tone: "green", open: 0 };
