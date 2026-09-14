@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type Piece = { id:number; code:number; description:string; quantity:number; material?:string; weightGrams?:number|null; silverGramValue?:number|null; productionStatus:string; productionValue:number; bathStatus?:string|null; bathValue?:number|null; bathSendStatus?:string|null; bathSendValue?:number|null; bathReturnStatus?:string|null; bathReturnValue?:number|null; mailStatus?:string|null; mailValue?:number|null; paidValue?:number|null; photoKey?:string|null; notes?:string|null };
+type Piece = { id:number; code:number; description:string; quantity:number; material?:string; weightGrams?:number|null; silverGramValue?:number|null; productionStatus:string; productionValue:number; bathStatus?:string|null; bathValue?:number|null; bathSendStatus?:string|null; bathSendValue?:number|null; bathReturnStatus?:string|null; bathReturnValue?:number|null; mailStatus?:string|null; mailValue?:number|null; transportValue?:number|null; paidValue?:number|null; photoKey?:string|null; notes?:string|null };
 type Draft = Omit<Piece,"id">;
 const money=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
 const materials=["Prata maciça","Ouro 18k · 10 milésimos","Ouro 18k · 15 milésimos","Ouro 18k · 20 milésimos","Ródio","Outro"];
-const cost=(p:Draft|Piece)=>Number(p.productionValue||0)+Number(p.bathValue||0)+Number(p.bathSendValue||0)+Number(p.bathReturnValue||0)+Number(p.mailValue||0)+((p.material==="Prata maciça"?Number(p.weightGrams||0)*Number(p.silverGramValue||0):0));
+const cost=(p:Draft|Piece)=>Number(p.productionValue||0)+Number(p.bathValue||0)+Number(p.bathSendValue||0)+Number(p.bathReturnValue||0)+Number(p.mailValue||0)+((p.bathSendValue==null&&p.bathReturnValue==null&&p.mailValue==null)?Number((p as Piece).transportValue||0):0)+((p.material==="Prata maciça"?Number(p.weightGrams||0)*Number(p.silverGramValue||0):0));
 const blank=(code:number):Draft=>({code,description:"",quantity:1,material:"Ouro 18k · 10 milésimos",weightGrams:null,silverGramValue:null,productionStatus:"EM PRODUÇÃO",productionValue:0,bathStatus:null,bathValue:null,bathSendStatus:null,bathSendValue:null,bathReturnStatus:null,bathReturnValue:null,mailStatus:null,mailValue:null,paidValue:0,photoKey:null,notes:null});
 
 export default function Home(){
