@@ -13,8 +13,8 @@ const blank=(code:number):Draft=>({code,description:"",quantity:1,material:"Ouro
 
 export default function Home(){
  const [pieces,setPieces]=useState<Piece[]>([]); const [draft,setDraft]=useState<Draft|null>(null); const [notice,setNotice]=useState("");
- const load=async()=>{const r=await fetch("/api/pieces",{cache:"no-store"}); const d=await r.json(); setPieces(d.pieces||[])};
- useEffect(()=>{void load()},[]);
+ const load=async()=>{const r=await fetch("/api/pieces",{cache:"no-store"}); const d=await r.json(); if(!r.ok)throw new Error(d.error||"Falha ao carregar peças"); if(!d.pieces?.length){await fetch("/api/pieces/seed",{method:"POST"});const seeded=await fetch("/api/pieces",{cache:"no-store"});const seededData=await seeded.json();setPieces(seededData.pieces||[]);return;} setPieces(d.pieces)};
+ useEffect(()=>{void load().catch(()=>setNotice("Não foi possível carregar os registros."))},[]);
  const totals=useMemo(()=>({paid:pieces.reduce((s,p)=>s+Number(p.paidValue||0),0),open:pieces.reduce((s,p)=>s+Math.max(0,cost(p)-Number(p.paidValue||0)),0)}),[pieces]);
  const patch=async(id:number,values:Partial<Piece>)=>{const r=await fetch("/api/pieces",{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({id,...values})}); const d=await r.json(); if(!r.ok){setNotice(d.error||"Não foi possível salvar");return;} setPieces(x=>x.map(p=>p.id===id?d.piece:p));};
  const add=async()=>{if(!draft?.description.trim())return setNotice("Digite o nome da peça na nova linha."); const r=await fetch("/api/pieces",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(draft)}); const d=await r.json(); if(!r.ok){setNotice(d.error||"Não foi possível adicionar");return;} setPieces(x=>[d.piece,...x]);setDraft(null);};
