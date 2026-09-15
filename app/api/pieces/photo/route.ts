@@ -1,12 +1,9 @@
-import { env } from "cloudflare:workers";
+import { eq } from "drizzle-orm";
+import { getDb } from "../../../../db";
+import { photos } from "../../../../db/schema";
 
 const maxFileSize = 5 * 1024 * 1024;
 const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
-
-function getBucket() {
-  if (!env.BUCKET) throw new Error("O armazenamento de fotos ainda não está disponível.");
-  return env.BUCKET;
-}
 
 export async function POST(request: Request) {
   try {
@@ -18,7 +15,8 @@ export async function POST(request: Request) {
 
     const extension = file.type.split("/")[1].replace("jpeg", "jpg");
     const key = `pieces/${crypto.randomUUID()}.${extension}`;
-    await getBucket().put(key, file.stream(), { httpMetadata: { contentType: file.type, cacheControl: "public, max-age=31536000, immutable" } });
+    const data = Buffer.from(await file.arrayBuffer()).toString("base64");
+    await getDb().insert(photos).values({ key, contentType: file.type, data });
     return Response.json({ key });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Não foi possível enviar a foto.";
@@ -30,12 +28,9 @@ export async function GET(request: Request) {
   try {
     const key = new URL(request.url).searchParams.get("key");
     if (!key || !key.startsWith("pieces/")) return new Response("Foto não encontrada", { status: 404 });
-    const object = await getBucket().get(key);
-    if (!object) return new Response("Foto não encontrada", { status: 404 });
-    const headers = new Headers();
-    object.writeHttpMetadata(headers);
-    headers.set("cache-control", "public, max-age=31536000, immutable");
-    return new Response(object.body, { headers });
+    const [photo] = await getDb().select().from(photos).where(eq(photos.key, key));
+    if (!photo) return new Response("Foto não encontrada", { status: 404 });
+    return new Response(Buffer.from(photo.data, "base64"), { headers: { "content-type": photo.contentType, "cache-control": "public, max-age=31536000, immutable" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Não foi possível abrir a foto.";
     return new Response(message, { status: 400 });

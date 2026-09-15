@@ -78,7 +78,7 @@ export async function POST(request: Request) {
   try {
     const payload = (await request.json()) as Record<string, unknown>;
     const values = validatePayload(payload);
-    const [piece] = await getDb().insert(pieces).values(values).returning();
+    const [piece] = await getDb().insert(pieces).values(values as any).returning();
     return Response.json({ piece }, { status: 201 });
   } catch (error) {
     return Response.json({ error: errorMessage(error) }, { status: 400 });

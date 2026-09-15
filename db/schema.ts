@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
-import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, real, pgTable, text } from "drizzle-orm/pg-core";
 
-export const pieces = sqliteTable("pieces", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const pieces = pgTable("pieces", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   code: integer("code").notNull(),
   description: text("description").notNull(),
   quantity: integer("quantity").notNull().default(1),
@@ -27,4 +27,11 @@ export const pieces = sqliteTable("pieces", {
   notes: text("notes"),
   createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const photos = pgTable("photos", {
+  key: text("key").primaryKey(),
+  contentType: text("content_type").notNull(),
+  data: text("data").notNull(),
+  createdAt: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
 });

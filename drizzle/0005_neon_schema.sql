@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS pieces (
+  id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code integer NOT NULL,
+  description text NOT NULL,
+  quantity integer NOT NULL DEFAULT 1,
+  material text NOT NULL DEFAULT 'Sem prata maciça',
+  weight_grams real,
+  silver_gram_value real,
+  production_status text NOT NULL DEFAULT 'EM PRODUÇÃO',
+  production_value real NOT NULL DEFAULT 0,
+  bath_status text,
+  bath_value real,
+  shipping_status text,
+  transport_value real,
+  bath_send_status text,
+  bath_send_value real,
+  bath_return_status text,
+  bath_return_value real,
+  mail_value real,
+  mail_status text,
+  billing_status text,
+  photo_key text,
+  paid_value real DEFAULT 0,
+  notes text,
+  created_at text NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at text NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS photos (key text PRIMARY KEY, content_type text NOT NULL, data text NOT NULL, created_at text NOT NULL DEFAULT CURRENT_TIMESTAMP);
