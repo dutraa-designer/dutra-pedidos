@@ -42,3 +42,6 @@ button, input, select, textarea { font: inherit; } button { cursor: pointer; }
 .payment-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; min-width: 118px; }.payment-status { display: inline-flex; padding: 4px 7px; border-radius: 6px; font-size: 10px; font-weight: 800; white-space: nowrap; }.payment-green { color: #298a60; background: #e5f7ed; }.payment-amber { color: #b17618; background: #fff3d9; }.payment-red { color: #ca6257; background: #ffebe7; }.payment-cell input { width: 106px; height: 29px; padding: 0 8px; border: 1px solid #e2e3ed; border-radius: 6px; background: #fbfbfe; color: #464a5d; font-size: 11px; outline: none; }.payment-cell input:focus { border-color: #9a94e8; box-shadow: 0 0 0 3px rgba(130,120,220,.13); }.payment-cell small { color: #989cac; font-size: 10px; white-space: nowrap; }
 .table-scroll select.status-selected { border-color:#80c9a1; background:#e9f8ef; color:#167047; font-weight:700; }
 .new-order { display:flex; justify-content:flex-end; padding:22px 24px 0; }.new-order button { min-height:46px; padding:0 20px; font-weight:800; letter-spacing:.03em; }
+.photo-cell label { text-align:center; line-height:1.1; }
+.photo-cell label span { display:block; margin-top:3px; font-size:7px; font-weight:700; }
+.photo-dragging { border-color:#6d62d4; background:#e7e3ff; }

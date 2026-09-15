@@ -12,7 +12,7 @@ const cost=(p:Draft|Piece)=>Number(p.productionValue||0)+Number(p.bathValue||0)+
 const blank=(code:number):Draft=>({code,description:"",quantity:1,material:"Ouro 18k · 10 milésimos",weightGrams:null,silverGramValue:null,productionStatus:"EM PRODUÇÃO",productionValue:0,bathStatus:null,bathValue:null,bathSendStatus:null,bathSendValue:null,bathReturnStatus:null,bathReturnValue:null,mailStatus:null,mailValue:null,paidValue:0,photoKey:null,notes:null});
 
 export default function Home(){
- const [pieces,setPieces]=useState<Piece[]>([]); const [draft,setDraft]=useState<Draft|null>(null); const [notice,setNotice]=useState("");
+ const [pieces,setPieces]=useState<Piece[]>([]); const [draft,setDraft]=useState<Draft|null>(null); const [notice,setNotice]=useState(""); const [draggingPhoto,setDraggingPhoto]=useState(false);
  const load=async()=>{const r=await fetch("/api/pieces",{cache:"no-store"}); const d=await r.json(); if(!r.ok)throw new Error(d.error||"Falha ao carregar peças"); setPieces(d.pieces||[])};
  useEffect(()=>{void load().catch(()=>setNotice("Não foi possível carregar os registros."))},[]);
  const totals=useMemo(()=>({paid:pieces.reduce((s,p)=>s+Number(p.paidValue||0),0),open:pieces.reduce((s,p)=>s+Math.max(0,cost(p)-Number(p.paidValue||0)),0)}),[pieces]);
@@ -21,9 +21,10 @@ export default function Home(){
  const del=async(id:number)=>{if(!confirm("Excluir esta linha?"))return; await fetch("/api/pieces",{method:"DELETE",headers:{"content-type":"application/json"},body:JSON.stringify({id})});setPieces(x=>x.filter(p=>p.id!==id));};
  const number=(value:string)=>value===""?null:Number(value);
  const upload=async(id:number,file:File)=>{const body=new FormData();body.append("file",file);const r=await fetch("/api/pieces/photo",{method:"POST",body});const d=await r.json();if(r.ok)void patch(id,{photoKey:d.key});else setNotice(d.error||"Foto não enviada");};
+ const handlePhotoDrop=(id:number,e:React.DragEvent<HTMLLabelElement>)=>{e.preventDefault();setDraggingPhoto(false);const file=e.dataTransfer.files?.[0];if(file)void upload(id,file);};
  const editCell=(p:Piece,key:keyof Piece,content:React.ReactNode)=><td>{content}</td>;
  const row=(p:Piece,isDraft=false)=>{const data=isDraft?draft!:p; const change=(key:keyof Draft,v:unknown)=>isDraft?setDraft({...data,[key]:v}):void patch(p.id,{[key]:v} as Partial<Piece>); const paid=Number(data.paidValue||0), total=cost(data), open=Math.max(0,total-paid); return <tr key={isDraft?"draft":p.id} className={isDraft?"draft-row":""}>
-  <td><div className="photo-cell">{!isDraft&&p.photoKey?<img src={`/api/pieces/photo?key=${encodeURIComponent(p.photoKey)}`} alt=""/>:<label>＋<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f&&!isDraft)void upload(p.id,f)}}/></label>}</div></td>
+  <td><div className={`photo-cell ${draggingPhoto?"photo-dragging":""}`}>{!isDraft&&p.photoKey?<img src={`/api/pieces/photo?key=${encodeURIComponent(p.photoKey)}`} alt=""/>:<label onDragOver={e=>{e.preventDefault();if(!isDraft)setDraggingPhoto(true)}} onDragLeave={()=>setDraggingPhoto(false)} onDrop={e=>{if(!isDraft)handlePhotoDrop(p.id,e)}}>＋<span>Arraste a foto<br/>ou clique</span><input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f&&!isDraft)void upload(p.id,f)}}/></label>}</div></td>
   <td><input className="ref-input" value={data.code} type="number" onChange={e=>change("code",Number(e.target.value))}/></td>
   <td><input className="name-input" placeholder="Nome da peça" value={data.description} onChange={e=>change("description",e.target.value)}/><small>{data.quantity||1} un.</small></td>
   <td><select value={data.material||"Outro"} onChange={e=>change("material",e.target.value)}>{materials.map(m=><option key={m}>{m}</option>)}</select>{data.material==="Prata maciça"&&<input placeholder="R$/g" type="number" value={data.silverGramValue??""} onChange={e=>change("silverGramValue",number(e.target.value))}/>}</td>
