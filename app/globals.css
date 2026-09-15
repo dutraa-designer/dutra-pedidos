@@ -59,6 +59,7 @@ button, input, select, textarea { font: inherit; } button { cursor: pointer; }
 @media(min-width:701px){.table-scroll th:last-child,.table-scroll td:last-child{position:static;box-shadow:none;background:transparent}}
 .table-scroll th:last-child,.table-scroll td:last-child{width:62px!important;min-width:62px!important;max-width:62px!important;padding-left:4px!important;padding-right:4px!important}.table-scroll td:last-child:empty{display:none}
 .table-scroll tbody tr td { background:inherit; }
+.table-scroll tbody tr td { background:transparent!important; }.table-scroll tbody tr { background:#fff; }.table-scroll tbody tr.draft-row { background:#f5f3ff; }.table-scroll tbody tr.completed-row { background:rgba(224,247,234,.72); }.table-scroll tbody tr.deadline-warning { animation:deadline-blue-pulse 1.8s ease-in-out infinite; }.table-scroll tbody tr.deadline-overdue { animation:deadline-red-pulse 1.8s ease-in-out infinite; }.deadline-warning td,.deadline-overdue td { animation:none!important; }.completed-row input,.completed-row select { background:#f3fcf6!important; }
 .payment-panel select:first-of-type { display:none; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { margin:0; -webkit-appearance:none; }
