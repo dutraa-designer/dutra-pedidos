@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +14,7 @@ const blank=(code:number):Draft=>({code,description:"",quantity:1,material:"Ouro
 
 export default function Home(){
  const [pieces,setPieces]=useState<Piece[]>([]); const [draft,setDraft]=useState<Draft|null>(null); const [draftPhoto,setDraftPhoto]=useState<{file:File;preview:string}|null>(null); const [payments,setPayments]=useState<Payment[]>([]); const [paymentPiece,setPaymentPiece]=useState(""); const [paymentAmount,setPaymentAmount]=useState(""); const [paymentDate,setPaymentDate]=useState(new Date().toISOString().slice(0,10)); const [paymentNote,setPaymentNote]=useState(""); const [notice,setNotice]=useState(""); const [draggingPhoto,setDraggingPhoto]=useState(false);
+ const saveTimers=useRef<Record<number,ReturnType<typeof setTimeout>>>({});
  const load=async()=>{const r=await fetch("/api/pieces",{cache:"no-store"}); const d=await r.json().catch(()=>({})); if(!r.ok)throw new Error(d.error||`Falha ao carregar peças (${r.status}).`); setPieces(d.pieces||[])};
  useEffect(()=>{void load().catch(()=>setNotice("Não foi possível carregar os registros."))},[]);
  useEffect(()=>{void fetch("/api/payments",{cache:"no-store"}).then(r=>r.json()).then(d=>setPayments(d.payments||[])).catch(()=>{})},[]);
@@ -29,7 +30,7 @@ export default function Home(){
  const upload=async(id:number,file:File)=>{if(!file.type.startsWith("image/")){setNotice("Solte uma imagem JPG, PNG, WEBP ou GIF.");return;}setNotice("");try{const body=new FormData();body.append("file",file);const r=await fetch("/api/pieces/photo",{method:"POST",body});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||`Falha no envio (${r.status}).`);await patch(id,{photoKey:d.key});}catch(error){setNotice(error instanceof Error?error.message:"Não foi possível enviar a foto.");}};
  const handlePhotoDrop=(id:number,e:React.DragEvent<HTMLDivElement>)=>{e.preventDefault();e.stopPropagation();setDraggingPhoto(false);const file=e.dataTransfer.files?.[0];if(file)void upload(id,file);};
  const editCell=(p:Piece,key:keyof Piece,content:React.ReactNode)=><td>{content}</td>;
- const row=(p:Piece,isDraft=false)=>{const data=isDraft?draft!:p; const change=(key:keyof Draft,v:unknown)=>isDraft?setDraft({...data,[key]:v}):void patch(p.id,{[key]:v} as Partial<Piece>); const paid=Number(data.paidValue||0), total=cost(data), open=Math.max(0,total-paid); return <tr key={isDraft?"draft":p.id} className={isDraft?"draft-row":""}>
+ const row=(p:Piece,isDraft=false)=>{const data=isDraft?draft!:p; const change=(key:keyof Draft,v:unknown)=>{if(isDraft){setDraft({...data,[key]:v});return;}setPieces(x=>x.map(item=>item.id===p.id?{...item,[key]:v}:item));clearTimeout(saveTimers.current[p.id]);saveTimers.current[p.id]=setTimeout(()=>void patch(p.id,{[key]:v} as Partial<Piece>),450);}; const paid=Number(data.paidValue||0), total=cost(data), open=Math.max(0,total-paid); return <tr key={isDraft?"draft":p.id} className={isDraft?"draft-row":""}>
   <td><div className={`photo-cell ${draggingPhoto?"photo-dragging":""}`} onDragEnter={e=>{e.preventDefault();e.stopPropagation();setDraggingPhoto(true)}} onDragOver={e=>{e.preventDefault();e.stopPropagation();e.dataTransfer.dropEffect="copy";setDraggingPhoto(true)}} onDragLeave={()=>setDraggingPhoto(false)} onDrop={e=>{e.preventDefault();e.stopPropagation();setDraggingPhoto(false);const f=e.dataTransfer.files?.[0];if(f){if(isDraft)chooseDraftPhoto(f);else void upload(p.id,f)}}}>{!isDraft&&p.photoKey?<img src={`/api/pieces/photo?key=${encodeURIComponent(p.photoKey)}`} alt="Foto da peça"/>:isDraft&&draftPhoto?<img src={draftPhoto.preview} alt="Preview da foto"/>:<label>＋<span>Solte a foto<br/>ou clique</span><input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){if(isDraft)chooseDraftPhoto(f);else void upload(p.id,f)}}}/></label>}</div></td>
   <td><input className="ref-input" value={data.code} type="number" onChange={e=>change("code",Number(e.target.value))}/></td>
   <td><input className="name-input" placeholder="Nome da peça" value={data.description} onChange={e=>change("description",e.target.value)}/><small>{data.quantity||1} un.</small></td>
