@@ -44,6 +44,7 @@ function validatePayload(payload: Record<string, unknown>, partial = false) {
     ...(payload.goldGramValue !== undefined ? { goldGramValue: payload.goldGramValue === "" || payload.goldGramValue === null ? null : Math.max(0, cleanNumber(payload.goldGramValue)) } : {}),
     ...(payload.goldFactor !== undefined ? { goldFactor: payload.goldFactor === "" || payload.goldFactor === null ? null : Math.max(0, cleanNumber(payload.goldFactor)) } : {}),
     ...(payload.customMaterial !== undefined ? { customMaterial: cleanText(payload.customMaterial) } : {}),
+    ...(payload.createdAt !== undefined ? { createdAt: cleanText(payload.createdAt) } : {}),
     ...(payload.productionStatus !== undefined ? { productionStatus: cleanText(payload.productionStatus) ?? "EM PRODUÇÃO" } : {}),
     ...(payload.productionValue !== undefined ? { productionValue: Math.max(0, cleanNumber(payload.productionValue)) } : {}),
     ...(payload.bathStatus !== undefined ? { bathStatus: cleanText(payload.bathStatus) } : {}),
