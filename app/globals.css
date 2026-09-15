@@ -79,3 +79,6 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .currency-input{position:relative}.currency-input span{position:absolute;left:8px;top:50%;z-index:1;transform:translateY(-50%);color:#9b9eae;font-size:11px;font-weight:800;pointer-events:none}.currency-input input{padding-left:27px!important}
  .login-logo { display:block; width:min(100%, 300px); height:150px; object-fit:cover; object-position:center; border-radius:20px; mix-blend-mode:multiply; filter:saturate(1.04) contrast(1.02); box-shadow:0 12px 26px rgba(61,54,120,.09); margin-bottom:16px; }
 @media(max-width:760px){.login-logo{width:min(100%,280px);height:125px;border-radius:16px;margin-bottom:12px;}}
+ .login-brand-logos { display:flex; align-items:center; gap:12px; }
+ .login-symbol { width:54px; height:54px; object-fit:contain; filter:drop-shadow(0 7px 10px rgba(137,91,22,.16)); opacity:.92; }
+@media(max-width:760px){.login-brand-logos{gap:9px}.login-symbol{width:42px;height:42px;}}
