@@ -55,6 +55,7 @@ button, input, select, textarea { font: inherit; } button { cursor: pointer; }
 .table-scroll { scrollbar-color:#aaa3e8 #f1f0f8; }
 @media(max-width:540px){.table-scroll th:last-child,.table-scroll td:last-child{position:static;box-shadow:none}.table-scroll table{min-width:1350px}.table-scroll:after{content:"Deslize para os lados para ver todos os campos e ações";display:block;padding:8px 14px;color:#8b8fa2;font-size:10px;text-align:center;background:#fafaff}}
 @media(max-width:700px){.table-scroll th:nth-child(10),.table-scroll td:nth-child(10),.table-scroll th:nth-child(11),.table-scroll td:nth-child(11){display:none}.table-scroll table{min-width:1120px}}
+@media(min-width:701px){.table-scroll{overflow-x:visible}.table-scroll table{min-width:0;table-layout:auto}.table-scroll th,.table-scroll td{padding-left:6px;padding-right:6px}.table-scroll th:first-child,.table-scroll td:first-child{padding-left:12px}.table-scroll th:last-child,.table-scroll td:last-child{padding-right:12px}.table-scroll td:nth-child(3){min-width:165px}.table-scroll td:nth-child(8){min-width:190px}.table-scroll input,.table-scroll select{min-width:64px;font-size:10px}.table-scroll .name-input{min-width:150px!important}}
 .payment-panel select:first-of-type { display:none; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { margin:0; -webkit-appearance:none; }
