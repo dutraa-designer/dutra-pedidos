@@ -58,6 +58,7 @@ button, input, select, textarea { font: inherit; } button { cursor: pointer; }
 @media(min-width:701px){.table-scroll{overflow-x:visible}.table-scroll table{min-width:0;table-layout:auto}.table-scroll th,.table-scroll td{padding-left:6px;padding-right:6px}.table-scroll th:first-child,.table-scroll td:first-child{padding-left:12px}.table-scroll th:last-child,.table-scroll td:last-child{padding-right:12px}.table-scroll td:nth-child(3){min-width:165px}.table-scroll td:nth-child(8){min-width:190px}.table-scroll input,.table-scroll select{min-width:64px;font-size:10px}.table-scroll .name-input{min-width:150px!important}}
 @media(min-width:701px){.table-scroll th:last-child,.table-scroll td:last-child{position:static;box-shadow:none;background:transparent}}
 .table-scroll th:last-child,.table-scroll td:last-child{width:62px!important;min-width:62px!important;max-width:62px!important;padding-left:4px!important;padding-right:4px!important}.table-scroll td:last-child:empty{display:none}
+.table-scroll tbody tr td { background:inherit; }
 .payment-panel select:first-of-type { display:none; }
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { margin:0; -webkit-appearance:none; }
