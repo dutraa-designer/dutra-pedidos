@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { getDb } from "../../../db";
 import { pieces } from "../../../db/schema";
 
@@ -11,6 +11,8 @@ const allowedStatuses = {
   mailStatus: ["NÃO ENVIADO", "ENVIADO"],
   billingStatus: ["PENDENTE", "OK"],
 } as const;
+
+async function ensureMaterialColumns() { await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_gram_value real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_factor real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS custom_material text`); }
 
 function cleanText(value: unknown) {
   return typeof value === "string" ? value.trim() : null;
@@ -39,6 +41,9 @@ function validatePayload(payload: Record<string, unknown>, partial = false) {
     ...(payload.material !== undefined ? { material: cleanText(payload.material) ?? "Sem prata maciça" } : {}),
     ...(payload.weightGrams !== undefined ? { weightGrams: payload.weightGrams === "" || payload.weightGrams === null ? null : Math.max(0, cleanNumber(payload.weightGrams)) } : {}),
     ...(payload.silverGramValue !== undefined ? { silverGramValue: payload.silverGramValue === "" || payload.silverGramValue === null ? null : Math.max(0, cleanNumber(payload.silverGramValue)) } : {}),
+    ...(payload.goldGramValue !== undefined ? { goldGramValue: payload.goldGramValue === "" || payload.goldGramValue === null ? null : Math.max(0, cleanNumber(payload.goldGramValue)) } : {}),
+    ...(payload.goldFactor !== undefined ? { goldFactor: payload.goldFactor === "" || payload.goldFactor === null ? null : Math.max(0, cleanNumber(payload.goldFactor)) } : {}),
+    ...(payload.customMaterial !== undefined ? { customMaterial: cleanText(payload.customMaterial) } : {}),
     ...(payload.productionStatus !== undefined ? { productionStatus: cleanText(payload.productionStatus) ?? "EM PRODUÇÃO" } : {}),
     ...(payload.productionValue !== undefined ? { productionValue: Math.max(0, cleanNumber(payload.productionValue)) } : {}),
     ...(payload.bathStatus !== undefined ? { bathStatus: cleanText(payload.bathStatus) } : {}),
@@ -66,7 +71,7 @@ function errorMessage(error: unknown) {
 }
 
 export async function GET() {
-  try {
+  try { await ensureMaterialColumns();
     const rows = await getDb().select().from(pieces).orderBy(desc(pieces.code), desc(pieces.id));
     return Response.json({ pieces: rows });
   } catch (error) {
@@ -75,7 +80,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  try {
+  try { await ensureMaterialColumns();
     const payload = (await request.json()) as Record<string, unknown>;
     const values = validatePayload(payload);
     const [piece] = await getDb().insert(pieces).values(values as any).returning();
@@ -86,7 +91,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  try {
+  try { await ensureMaterialColumns();
     const payload = (await request.json()) as Record<string, unknown>;
     const id = Math.floor(cleanNumber(payload.id, 0));
     if (!id) return Response.json({ error: "ID inválido." }, { status: 400 });
