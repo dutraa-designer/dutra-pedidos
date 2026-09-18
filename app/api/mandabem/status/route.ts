@@ -4,11 +4,15 @@ function shipmentList(value: unknown): any[] {
   if (Array.isArray(value)) return value;
   if (!value || typeof value !== "object") return [];
   const object = value as Record<string, unknown>;
-  for (const key of ["envios", "shipments", "items", "dados", "data"]) {
-    if (Array.isArray(object[key])) return object[key] as any[];
+  for (const key of ["envios", "envio", "shipments", "items", "lista", "results", "dados", "data"]) {
+    const found = shipmentList(object[key]);
+    if (found.length) return found;
   }
-  const values = Object.values(object);
-  return values.length && values.every(item => item && typeof item === "object") ? values : [];
+  for (const child of Object.values(object)) {
+    const found = shipmentList(child);
+    if (found.length) return found;
+  }
+  return [];
 }
 
 async function listShipments() {
