@@ -99,3 +99,11 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .mandabem-column{min-width:112px;text-align:center}.mandabem-column .mandabem-trigger{white-space:nowrap}.mandabem-column .mandabem-live-status{font-size:10px}
 table th:nth-child(13),table td:nth-child(13){display:none}
 .table-scroll th:nth-child(11),.table-scroll td:nth-child(11){display:table-cell!important}.table-scroll th:nth-child(13),.table-scroll td:nth-child(13){display:none!important}
+/* Keep the financial column aligned with the rest of the order table. */
+@media(min-width:701px){
+  .table-scroll{overflow-x:auto}
+  .table-scroll table{min-width:1840px;table-layout:auto}
+  .table-scroll th,.table-scroll td{padding-left:9px;padding-right:9px}
+  .table-scroll th:nth-child(11),.table-scroll td:nth-child(11){min-width:112px;white-space:nowrap}
+  .table-scroll th:nth-child(12),.table-scroll td:nth-child(12){min-width:92px;white-space:nowrap}
+}
