@@ -18,8 +18,10 @@ async function listShipments() {
   const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 730);
   const params = new URLSearchParams({ plataforma_id: platformId, plataforma_chave: platformKey, start_date: start.toISOString().slice(0,10), end_date: end.toISOString().slice(0,10) });
   const response = await fetch("https://mandabem.com.br/ws/envios", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
-  const data = await response.json();
-  if (!response.ok || data?.resultado?.sucesso === "false" || data?.resultado?.sucesso === false) throw new Error(data?.resultado?.erro || "Não foi possível carregar os envios do Manda Bem.");
+  const raw = await response.text();
+  let data: any = {};
+  try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error(`Resposta inválida do Manda Bem (${response.status}).`); }
+  if (!response.ok || data?.resultado?.sucesso === "false" || data?.resultado?.sucesso === false) throw new Error(data?.resultado?.erro || data?.resultado?.mensagem || `Manda Bem respondeu HTTP ${response.status}.`);
   return shipmentList(data?.resultado?.dados);
 }
 
@@ -36,11 +38,13 @@ export async function POST(request: Request) {
     let endpoint = "https://mandabem.com.br/ws/envio";
     if (body.envioId) params.set("id", body.envioId); else if (body.refId) params.set("ref_id", body.refId); else { endpoint = "https://mandabem.com.br/ws/envios"; const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 730); params.set("start_date", start.toISOString().slice(0,10)); params.set("end_date", end.toISOString().slice(0,10)); }
     const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
-    const data = await response.json();
+    const raw = await response.text();
+    let data: any = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error(`Resposta inválida do Manda Bem (${response.status}).`); }
     const result = data?.resultado;
     const shipment = body.label ? shipmentList(result?.dados).find((item:any)=>String(item?.etiqueta||"").toLowerCase()===body.label!.trim().toLowerCase()) : (shipmentList(result?.dados)[0] || result?.dados);
     if (body.label && !shipment) return NextResponse.json({ error: "Etiqueta não encontrada nos envios recentes do Manda Bem." }, { status: 404 });
-    if (!response.ok || result?.sucesso === "false" || result?.sucesso === false) return NextResponse.json({ error: result?.erro || result?.mensagem || "O Manda Bem não encontrou esse envio." }, { status: 502 });
+    if (!response.ok || result?.sucesso === "false" || result?.sucesso === false) return NextResponse.json({ error: result?.erro || result?.mensagem || `Manda Bem respondeu HTTP ${response.status}.` }, { status: 502 });
     const status = String(shipment?.status || "");
     const posted = status.toLowerCase() === "objeto postado";
     return NextResponse.json({ posted, status: status || "Não informado", label: shipment?.etiqueta || null, envioId: shipment?.envio_id || body.envioId || null, checkedAt: new Date().toISOString() });
