@@ -111,7 +111,7 @@ table th:nth-child(13),table td:nth-child(13){display:none}
   .table-scroll th:nth-child(11),.table-scroll td:nth-child(11){min-width:112px;white-space:nowrap}
   .table-scroll th:nth-child(12),.table-scroll td:nth-child(12){min-width:92px;white-space:nowrap}
 }
-@media(max-width:2200px){
+@media(max-width:900px){
   .table-scroll{overflow-x:visible;padding:0 12px}
   .table-scroll table{display:block;width:100%;min-width:0!important;table-layout:auto}
   .table-scroll thead{display:none}
