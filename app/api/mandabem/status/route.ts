@@ -62,8 +62,9 @@ export async function POST(request: Request) {
     if (body.label && !shipment) return NextResponse.json({ error: "Etiqueta não encontrada nos envios recentes do Manda Bem." }, { status: 404 });
     if (!response.ok || result?.sucesso === "false" || result?.sucesso === false) return NextResponse.json({ error: result?.erro || result?.mensagem || `Manda Bem respondeu HTTP ${response.status}.` }, { status: 502 });
     const status = String(shipment?.status || "");
-    const posted = status.toLowerCase() === "objeto postado";
+    const posted = status.toLowerCase().startsWith("objeto postado");
+    const displayStatus = posted ? "Objeto postado" : status;
     const deliveredAt = shipmentDate(shipment, ["data_entrega", "data_entregue", "entregue_em", "delivered_at", "delivery_date", "data_status"]);
-    return NextResponse.json({ posted, status: status || "Não informado", label: shipment?.etiqueta || null, envioId: shipment?.envio_id || body.envioId || null, deliveredAt, checkedAt: new Date().toISOString() });
+    return NextResponse.json({ posted, status: displayStatus || "Não informado", label: shipment?.etiqueta || null, envioId: shipment?.envio_id || body.envioId || null, deliveredAt, checkedAt: new Date().toISOString() });
   } catch { return NextResponse.json({ error: "Não foi possível consultar o Manda Bem agora." }, { status: 502 }); }
 }
