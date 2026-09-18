@@ -22,7 +22,7 @@ async function listShipments() {
   let data: any = {};
   try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error(`Resposta inválida do Manda Bem (${response.status}).`); }
   if (!response.ok || data?.resultado?.sucesso === "false" || data?.resultado?.sucesso === false) throw new Error(data?.resultado?.erro || data?.resultado?.mensagem || `Manda Bem respondeu HTTP ${response.status}.`);
-  return shipmentList(data?.resultado?.dados);
+  return shipmentList(data?.resultado?.dados ?? data?.resultado ?? data?.dados ?? data);
 }
 
 export async function GET() { try { return NextResponse.json({ shipments: await listShipments() }); } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Não foi possível carregar os envios." }, { status: 502 }); } }
@@ -42,7 +42,8 @@ export async function POST(request: Request) {
     let data: any = {};
     try { data = raw ? JSON.parse(raw) : {}; } catch { throw new Error(`Resposta inválida do Manda Bem (${response.status}).`); }
     const result = data?.resultado;
-    const shipment = body.label ? shipmentList(result?.dados).find((item:any)=>String(item?.etiqueta||"").toLowerCase()===body.label!.trim().toLowerCase()) : (shipmentList(result?.dados)[0] || result?.dados);
+    const shipments = shipmentList(result?.dados ?? result ?? data?.dados ?? data);
+    const shipment = body.label ? shipments.find((item:any)=>String(item?.etiqueta||"").toLowerCase()===body.label!.trim().toLowerCase()) : (shipments[0] || result?.dados);
     if (body.label && !shipment) return NextResponse.json({ error: "Etiqueta não encontrada nos envios recentes do Manda Bem." }, { status: 404 });
     if (!response.ok || result?.sucesso === "false" || result?.sucesso === false) return NextResponse.json({ error: result?.erro || result?.mensagem || `Manda Bem respondeu HTTP ${response.status}.` }, { status: 502 });
     const status = String(shipment?.status || "");
