@@ -12,7 +12,7 @@ const allowedStatuses = {
   billingStatus: ["PENDENTE", "OK"],
 } as const;
 
-async function ensureMaterialColumns() { await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_gram_value real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_factor real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS custom_material text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_confirmed integer NOT NULL DEFAULT 0`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_at text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_ref_id text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_envio_id text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_label text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_status text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_checked_at text`); }
+async function ensureMaterialColumns() { await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_gram_value real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_factor real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS custom_material text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_confirmed integer NOT NULL DEFAULT 0`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_at text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_ref_id text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_envio_id text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_label text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_status text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_checked_at text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mandabem_delivered_at text`); }
 
 function cleanText(value: unknown) {
   return typeof value === "string" ? value.trim() : null;
@@ -64,6 +64,7 @@ function validatePayload(payload: Record<string, unknown>, partial = false) {
     ...(payload.mandabemLabel !== undefined ? { mandabemLabel: cleanText(payload.mandabemLabel) } : {}),
     ...(payload.mandabemStatus !== undefined ? { mandabemStatus: cleanText(payload.mandabemStatus) } : {}),
     ...(payload.mandabemCheckedAt !== undefined ? { mandabemCheckedAt: cleanText(payload.mandabemCheckedAt) } : {}),
+    ...(payload.mandabemDeliveredAt !== undefined ? { mandabemDeliveredAt: cleanText(payload.mandabemDeliveredAt) } : {}),
     ...(payload.billingStatus !== undefined ? { billingStatus: cleanText(payload.billingStatus) } : {}),
     ...(payload.photoKey !== undefined ? { photoKey: cleanText(payload.photoKey) } : {}),
     ...(payload.paidValue !== undefined ? { paidValue: payload.paidValue === "" || payload.paidValue === null ? 0 : Math.max(0, cleanNumber(payload.paidValue)) } : {}),

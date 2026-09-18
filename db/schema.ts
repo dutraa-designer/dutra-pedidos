@@ -31,6 +31,7 @@ export const pieces = pgTable("pieces", {
   mandabemLabel: text("mandabem_label"),
   mandabemStatus: text("mandabem_status"),
   mandabemCheckedAt: text("mandabem_checked_at"),
+  mandabemDeliveredAt: text("mandabem_delivered_at"),
   billingStatus: text("billing_status"),
   photoKey: text("photo_key"),
   paidValue: real("paid_value").default(0),

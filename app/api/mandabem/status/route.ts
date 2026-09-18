@@ -18,6 +18,14 @@ function shipmentList(value: unknown): any[] {
   return [];
 }
 
+function shipmentDate(shipment: any, keys: string[]) {
+  for (const key of keys) {
+    const value = shipment?.[key];
+    if (value) return String(value);
+  }
+  return null;
+}
+
 async function listShipments() {
   const platformId = process.env.MANDABEM_PLATFORM_ID;
   const platformKey = process.env.MANDABEM_PLATFORM_KEY;
@@ -55,6 +63,7 @@ export async function POST(request: Request) {
     if (!response.ok || result?.sucesso === "false" || result?.sucesso === false) return NextResponse.json({ error: result?.erro || result?.mensagem || `Manda Bem respondeu HTTP ${response.status}.` }, { status: 502 });
     const status = String(shipment?.status || "");
     const posted = status.toLowerCase() === "objeto postado";
-    return NextResponse.json({ posted, status: status || "Não informado", label: shipment?.etiqueta || null, envioId: shipment?.envio_id || body.envioId || null, checkedAt: new Date().toISOString() });
+    const deliveredAt = shipmentDate(shipment, ["data_entrega", "data_entregue", "entregue_em", "delivered_at", "delivery_date", "data_status"]);
+    return NextResponse.json({ posted, status: status || "Não informado", label: shipment?.etiqueta || null, envioId: shipment?.envio_id || body.envioId || null, deliveredAt, checkedAt: new Date().toISOString() });
   } catch { return NextResponse.json({ error: "Não foi possível consultar o Manda Bem agora." }, { status: 502 }); }
 }
