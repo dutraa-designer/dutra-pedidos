@@ -143,3 +143,4 @@ table th:nth-child(13),table td:nth-child(13){display:none}
   .table-scroll td:nth-child(10)::before{display:block;margin-bottom:6px}
   .table-scroll td:nth-child(11),.table-scroll td:nth-child(12){white-space:nowrap}
 }
+.table-scroll tbody tr[draggable="true"]{cursor:grab}.table-scroll tbody tr[draggable="true"]:active{cursor:grabbing}.table-scroll tbody tr.dragging-row{opacity:.5;outline:2px dashed #7165db;outline-offset:-2px}

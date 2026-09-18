@@ -32,6 +32,7 @@ export const pieces = pgTable("pieces", {
   mandabemStatus: text("mandabem_status"),
   mandabemCheckedAt: text("mandabem_checked_at"),
   mandabemDeliveredAt: text("mandabem_delivered_at"),
+  sortOrder: integer("sort_order"),
   billingStatus: text("billing_status"),
   photoKey: text("photo_key"),
   paidValue: real("paid_value").default(0),
