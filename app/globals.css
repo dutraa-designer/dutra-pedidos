@@ -98,3 +98,4 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .mandabem-live-status{display:block;margin-top:4px;color:#9b6713;font-size:10px;font-weight:700}.mandabem-live-status.confirmed{color:#23835c}
 .mandabem-column{min-width:112px;text-align:center}.mandabem-column .mandabem-trigger{white-space:nowrap}.mandabem-column .mandabem-live-status{font-size:10px}
 table th:nth-child(13),table td:nth-child(13){display:none}
+.table-scroll th:nth-child(11),.table-scroll td:nth-child(11){display:table-cell!important}.table-scroll th:nth-child(13),.table-scroll td:nth-child(13){display:none!important}
