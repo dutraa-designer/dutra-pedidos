@@ -15,7 +15,7 @@ async function listShipments() {
   const platformId = process.env.MANDABEM_PLATFORM_ID;
   const platformKey = process.env.MANDABEM_PLATFORM_KEY;
   if (!platformId || !platformKey) throw new Error("Credenciais do Manda Bem não configuradas.");
-  const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 120);
+  const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 730);
   const params = new URLSearchParams({ plataforma_id: platformId, plataforma_chave: platformKey, start_date: start.toISOString().slice(0,10), end_date: end.toISOString().slice(0,10) });
   const response = await fetch("https://mandabem.com.br/ws/envios", { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
   const data = await response.json();
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   try {
     const params = new URLSearchParams({ plataforma_id: platformId, plataforma_chave: platformKey });
     let endpoint = "https://mandabem.com.br/ws/envio";
-    if (body.envioId) params.set("id", body.envioId); else if (body.refId) params.set("ref_id", body.refId); else { endpoint = "https://mandabem.com.br/ws/envios"; const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 120); params.set("start_date", start.toISOString().slice(0,10)); params.set("end_date", end.toISOString().slice(0,10)); }
+    if (body.envioId) params.set("id", body.envioId); else if (body.refId) params.set("ref_id", body.refId); else { endpoint = "https://mandabem.com.br/ws/envios"; const end = new Date(); const start = new Date(); start.setDate(start.getDate() - 730); params.set("start_date", start.toISOString().slice(0,10)); params.set("end_date", end.toISOString().slice(0,10)); }
     const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: params, cache: "no-store" });
     const data = await response.json();
     const result = data?.resultado;
