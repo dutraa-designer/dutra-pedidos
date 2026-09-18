@@ -146,3 +146,4 @@ table th:nth-child(13),table td:nth-child(13){display:none}
 .table-scroll tbody tr[draggable="true"]{cursor:grab}.table-scroll tbody tr[draggable="true"]:active{cursor:grabbing}.table-scroll tbody tr.dragging-row{opacity:.5;outline:2px dashed #7165db;outline-offset:-2px}
 @keyframes mandabem-attention{0%,100%{background:#fff3d9;color:#9b6713;box-shadow:0 0 0 rgba(205,91,82,0)}50%{background:#ffe2df;color:#b4534e;box-shadow:0 0 9px rgba(205,91,82,.18)}}
 .mandabem-live-status.attention{animation:mandabem-attention 4s ease-in-out infinite}
+.mandabem-live-status.delivered{background:#dff6e9;color:#198754;font-weight:800}
