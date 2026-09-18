@@ -104,6 +104,8 @@ table th:nth-child(13),table td:nth-child(13){display:none}
   .table-scroll{overflow-x:auto}
   .table-scroll table{min-width:1840px;table-layout:auto}
   .table-scroll th,.table-scroll td{padding-left:9px;padding-right:9px}
+  .table-scroll th:nth-child(6),.table-scroll td:nth-child(6){min-width:136px;width:136px}
+  .table-scroll td:nth-child(6) input,.table-scroll td:nth-child(6) select{width:100%;min-width:0}
   .table-scroll th:nth-child(8),.table-scroll td:nth-child(8){min-width:132px;width:132px}
   .table-scroll td:nth-child(8) input,.table-scroll td:nth-child(8) select{width:100%;min-width:0}
   .table-scroll th:nth-child(11),.table-scroll td:nth-child(11){min-width:112px;white-space:nowrap}
