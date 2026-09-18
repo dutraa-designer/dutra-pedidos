@@ -12,7 +12,7 @@ const allowedStatuses = {
   billingStatus: ["PENDENTE", "OK"],
 } as const;
 
-async function ensureMaterialColumns() { await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_gram_value real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_factor real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS custom_material text`); }
+async function ensureMaterialColumns() { await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_gram_value real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS gold_factor real`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS custom_material text`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_confirmed integer NOT NULL DEFAULT 0`); await getDb().execute(sql`ALTER TABLE pieces ADD COLUMN IF NOT EXISTS mail_posted_at text`); }
 
 function cleanText(value: unknown) {
   return typeof value === "string" ? value.trim() : null;
@@ -57,6 +57,8 @@ function validatePayload(payload: Record<string, unknown>, partial = false) {
     ...(payload.bathReturnValue !== undefined ? { bathReturnValue: payload.bathReturnValue === "" || payload.bathReturnValue === null ? null : Math.max(0, cleanNumber(payload.bathReturnValue)) } : {}),
     ...(payload.mailValue !== undefined ? { mailValue: payload.mailValue === "" || payload.mailValue === null ? null : Math.max(0, cleanNumber(payload.mailValue)) } : {}),
     ...(payload.mailStatus !== undefined ? { mailStatus: cleanText(payload.mailStatus) } : {}),
+    ...(payload.mailPostedConfirmed !== undefined ? { mailPostedConfirmed: payload.mailPostedConfirmed ? 1 : 0 } : {}),
+    ...(payload.mailPostedAt !== undefined ? { mailPostedAt: cleanText(payload.mailPostedAt) } : {}),
     ...(payload.billingStatus !== undefined ? { billingStatus: cleanText(payload.billingStatus) } : {}),
     ...(payload.photoKey !== undefined ? { photoKey: cleanText(payload.photoKey) } : {}),
     ...(payload.paidValue !== undefined ? { paidValue: payload.paidValue === "" || payload.paidValue === null ? 0 : Math.max(0, cleanNumber(payload.paidValue)) } : {}),

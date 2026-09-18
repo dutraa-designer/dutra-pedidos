@@ -24,6 +24,8 @@ export const pieces = pgTable("pieces", {
   bathReturnValue: real("bath_return_value"),
   mailValue: real("mail_value"),
   mailStatus: text("mail_status"),
+  mailPostedConfirmed: integer("mail_posted_confirmed").notNull().default(0),
+  mailPostedAt: text("mail_posted_at"),
   billingStatus: text("billing_status"),
   photoKey: text("photo_key"),
   paidValue: real("paid_value").default(0),
