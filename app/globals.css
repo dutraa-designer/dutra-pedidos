@@ -111,3 +111,35 @@ table th:nth-child(13),table td:nth-child(13){display:none}
   .table-scroll th:nth-child(11),.table-scroll td:nth-child(11){min-width:112px;white-space:nowrap}
   .table-scroll th:nth-child(12),.table-scroll td:nth-child(12){min-width:92px;white-space:nowrap}
 }
+@media(max-width:900px){
+  .table-scroll{overflow-x:visible;padding:0 12px}
+  .table-scroll table{display:block;width:100%;min-width:0!important;table-layout:auto}
+  .table-scroll thead{display:none}
+  .table-scroll tbody,.table-scroll tr{display:block;width:100%}
+  .table-scroll tbody tr{margin:0 0 12px;padding:10px 0;border:1px solid #ecebf5;border-radius:12px;background:#fff!important;box-shadow:0 5px 14px rgba(48,45,92,.05)}
+  .table-scroll tbody tr.draft-row{background:#f8f7ff!important}
+  .table-scroll td{display:grid!important;grid-template-columns:105px minmax(0,1fr);align-items:center;gap:8px;width:100%!important;min-width:0!important;max-width:none!important;padding:9px 12px!important;border-bottom:1px solid #f2f1f7}
+  .table-scroll td:last-child{display:flex!important;justify-content:flex-end;padding:8px 12px!important;border-bottom:0}
+  .table-scroll td:nth-child(1)::before{content:"Foto"}
+  .table-scroll td:nth-child(2)::before{content:"Referência"}
+  .table-scroll td:nth-child(3)::before{content:"Data"}
+  .table-scroll td:nth-child(4)::before{content:"Peça"}
+  .table-scroll td:nth-child(5)::before{content:"Material"}
+  .table-scroll td:nth-child(6)::before{content:"Produção"}
+  .table-scroll td:nth-child(7)::before{content:"Peso"}
+  .table-scroll td:nth-child(8)::before{content:"Banho"}
+  .table-scroll td:nth-child(9)::before{content:"Logística"}
+  .table-scroll td:nth-child(10)::before{content:"Postagem"}
+  .table-scroll td:nth-child(11)::before{content:"Custo total"}
+  .table-scroll td:nth-child(12)::before{content:"Já pagou"}
+  .table-scroll td:nth-child(13){display:none!important}
+  .table-scroll td::before{color:#8f92a5;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .table-scroll td:nth-child(1) .photo-cell{justify-self:start}
+  .table-scroll td:nth-child(6) input,.table-scroll td:nth-child(6) select,.table-scroll td:nth-child(8) input,.table-scroll td:nth-child(8) select{width:100%;min-width:0}
+  .table-scroll td:nth-child(9){display:block!important}
+  .table-scroll td:nth-child(9)::before{display:block;margin-bottom:6px}
+  .table-scroll td:nth-child(9) .logistics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .table-scroll td:nth-child(10){display:block!important;text-align:left}
+  .table-scroll td:nth-child(10)::before{display:block;margin-bottom:6px}
+  .table-scroll td:nth-child(11),.table-scroll td:nth-child(12){white-space:nowrap}
+}
